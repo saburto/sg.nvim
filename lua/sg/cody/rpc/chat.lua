@@ -157,9 +157,9 @@ function Chat:_add_prompt_keymaps()
         ---@param item cody.ChatModelProvider
         format_item = function(item)
           if item.codyProOnly then
-            return string.format("%s [Pro]", item.model)
+            return string.format("%s [Pro]", item.title)
           else
-            return item.model
+            return item.title
           end
         end,
       }, function(choice)

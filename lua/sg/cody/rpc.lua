@@ -21,12 +21,14 @@ local is_ready = function(opts)
     return true
   end
 
-  if not auth.get() then
-    return false
-  end
+  return true
+
+  -- if not auth.get() then
+  --   return false
+  -- end
 
   ---@diagnostic disable-next-line: return-type-mismatch
-  return M.server_info.authenticated and M.server_info.codyEnabled
+  -- return M.server_info.authenticated and M.server_info.codyEnabled
 end
 
 local track = function(msg)
@@ -77,7 +79,7 @@ local get_server_config = function(creds, remote_url)
   }
 end
 
-local cody_args = { config.node_executable, config.cody_agent }
+local cody_args = { "cody", "api", "jsonrpc-stdio" }
 -- We can insert node breakpoint to debug the agent if needed
 -- table.insert(cody_args, 1, "--insert-brk")
 
@@ -188,17 +190,21 @@ M.start = function(opts, callback)
     -- When not testing, we don't need to check auth
     -- (this won't work with actual sourcegraph isntance, so it's
     --  not actually skipping auth on the backend or anything)
-    if not config.testing then
-      if not data.authenticated then
-        require("sg.notify").INVALID_AUTH()
-        return nil
-      end
-
-      if not data.codyEnabled then
-        require("sg.notify").CODY_DISABLED()
-        return nil
-      end
-    end
+    -- if not config.testing then
+    --   if not data.authenticated then
+    --     vim.notify("[sg-cody] data:" .. vim.inspect(data))
+    --     vim.notify("[sg-cody] server info:" .. vim.inspect(M.server_info))
+    --     require("sg.notify").INVALID_AUTH()
+    --     return nil
+    --   end
+    --
+    --   if not data.codyEnabled then
+    --     require("sg.notify").CODY_DISABLED()
+    --     return nil
+    --   end
+    -- end
+    data.authenticated = true
+    data.codyEnabled = true
 
     -- Clear or reset the server information
     M.server_info = data or {}
